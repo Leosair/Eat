@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pre-made Meals</title>
+    <style>
+
+        /* --- 1. Base Layout --- */
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            background-image: url("Images/Background.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-container {
+            background: white;
+            width: 90%;
+            max-width: 420px;
+            max-height: 90dvh;
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-area {
+            text-align: center;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .main-title { font-size: 1.2rem; font-weight: 700; margin: 0; color: #343a40; }
+        .sub-title  { font-size: 0.9rem; color: #868e96; margin-top: 5px; }
+
+        /* --- 2. Gallery Grid --- */
+        .gallery-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .meal-card {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .meal-card:hover {
+            background: #eef2f3;
+        }
+
+        .meal-card.selected {
+            border-color: #20c997;
+            background: #e6fcf5;
+            box-shadow: 0 2px 8px rgba(32,201,151,0.25);
+        }
+
+        .meal-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .meal-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #495057;
+        }
+
+        .meal-desc {
+            font-size: 0.75rem;
+            color: #adb5bd;
+        }
+
+        /* --- 3. Nutrition Box --- */
+        .nutrition-wrapper {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .nutrition-wrapper.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .nutri-item {
+            background: white;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .nutri-val   { font-size: 1.1rem; font-weight: 800; color: #333; }
+        .nutri-label { font-size: 0.7rem; color: #868e96; text-transform: uppercase; }
+
+        /* --- 4. Button --- */
+        .btn-machine {
+            background-color: #ff6b6b;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+            margin-top: 1rem;
+            cursor: pointer;
+
+            display: none;
+            animation: popUp 0.3s ease;
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .back-link a { color: #adb5bd; text-decoration: none; }
+
+    </style>
+</head>
+<body>
+
+<div class="card-container">
+
+    <div class="header-area">
+        <h1 class="main-title">Select a Meal</h1>
+        <p class="sub-title">Choose from our chef's favorites</p>
+    </div>
+
+    <!-- ⭐ GALLERY HERE ⭐ -->
+    <div class="gallery-area" id="gallery">
+        <!-- Cards auto-created by JS -->
+    </div>
+
+    <!-- Nutrition Box -->
+    <div class="nutrition-wrapper" id="nutri-box">
+        <div class="nutrition-grid">
+            <div class="nutri-item"><span class="nutri-val" id="val-cals">--</span><span class="nutri-label">Calories</span></div>
+            <div class="nutri-item"><span class="nutri-val" id="val-pro">--</span><span class="nutri-label">Protein</span></div>
+            <div class="nutri-item"><span class="nutri-val" id="val-carbs">--</span><span class="nutri-label">Carbs</span></div>
+            <div class="nutri-item"><span class="nutri-val" id="val-fat">--</span><span class="nutri-label">Fat</span></div>
+        </div>
+    </div>
+
+    <a href="#" class="btn-machine" id="cta-btn">
+        Search for your closest machine!
+    </a>
+
+    <div class="back-link"><a href="index.html">← Back to Home</a></div>
+
+</div>
+
+<script>
+
+    /* --------------------------
+       1) Define Meals
+    --------------------------- */
+    const mealList = [
+        {
+            id: "m1",
+            name: "Classic Chicken Caesar",
+            desc: "Grilled chicken, romaine, parmesan"
+        },
+        {
+            id: "m2",
+            name: "Spicy Tofu Bowl",
+            desc: "Tofu, quinoa, spicy peanut sauce"
+        },
+        {
+            id: "m3",
+            name: "Keto Steak Plate",
+            desc: "Beef steak, broccoli, garlic butter"
+        },
+        {
+            id: "m4",
+            name: "Mediterranean Pasta",
+            desc: "Penne, olives, feta, tomatoes"
+        },
+        {
+            id: "m5",
+            name: "Power Salmon Box",
+            desc: "Salmon, brown rice, avocado"
+        },
+        {
+            id: "m6",
+            name: "Lasagna",
+            desc: "Bologna, mushrooms, alfredo sauce"
+        }
+    ];
+
+    const mealData = {
+        "m1": { cals: 450, pro: 35, carbs: 12, fat: 22 },
+        "m2": { cals: 380, pro: 18, carbs: 45, fat: 14 },
+        "m3": { cals: 520, pro: 45, carbs: 8,  fat: 32 },
+        "m4": { cals: 410, pro: 12, carbs: 65, fat: 10 },
+        "m5": { cals: 550, pro: 38, carbs: 50, fat: 20 },
+        "m6": { cals: 750, pro: 28, carbs: 52, fat: 48 }
+    };
+
+    /* --------------------------
+       2) Construct Gallery
+    --------------------------- */
+    const gallery = document.getElementById("gallery");
+
+    mealList.forEach(meal => {
+        const imgName = meal.name.replaceAll(" ", "_") + ".png";  // ⭐ Space → "_"
+        const imgPath = "Images/" + imgName;
+
+        const card = document.createElement("div");
+        card.className = "meal-card";
+        card.id = "card-" + meal.id;
+        card.onclick = () => selectMeal(meal.id);
+
+        card.innerHTML = `
+            <img src="${imgPath}" class="meal-img">
+            <div class="meal-title">${meal.name}</div>
+            <div class="meal-desc">${meal.desc}</div>
+        `;
+
+        gallery.appendChild(card);
+    });
+
+    /* --------------------------
+       3) Selection Logic
+    --------------------------- */
+    function selectMeal(id) {
+
+        // visual highlight
+        document.querySelectorAll(".meal-card").forEach(c => c.classList.remove("selected"));
+        document.getElementById("card-" + id).classList.add("selected");
+
+        // activate nutrition panel
+        document.getElementById("nutri-box").classList.add("active");
+
+        const d = mealData[id];
+        animate("val-cals", d.cals, "");
+        animate("val-pro",  d.pro,  "g");
+        animate("val-carbs",d.carbs,"g");
+        animate("val-fat",  d.fat,  "g");
+
+        // show button
+        document.getElementById("cta-btn").style.display = "flex";
+    }
+
+    function animate(id, value, suffix) {
+        document.getElementById(id).innerText = value + suffix;
+    }
+
+</script>
+
+</body>
+</html>

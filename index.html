@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Meal Plan</title>
+    <style>
+        /* 1. General Page Styling */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9; /* Light grey background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 2. Main Container */
+        .container {
+            text-align: center;
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        /* 3. Logo Placeholder Styling */
+        .logo-placeholder {
+            width: 150px;
+            height: 150px;
+            background-color: #ddd; /* Grey placeholder color */
+            border: 2px dashed #999;
+            border-radius: 50%; /* Makes it a circle */
+            margin: 0 auto 2.5rem auto; /* Centers it and adds space below */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+        }
+
+        /* If you have a real image, hide the .logo-placeholder and show this instead */
+        .real-logo {
+            max-width: 150px;
+            margin-bottom: 2.5rem;
+            display: none; /* Hidden by default until you add an image */
+        }
+
+        /* 4. Button Container */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* Space between buttons */
+        }
+
+        /* 5. Button Styling */
+        .btn {
+            display: block;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Specific Colors for the buttons */
+        .btn-craft {
+            background-color: #ff6b6b; /* Salmon/Red color */
+            color: white;
+        }
+        
+        .btn-premade {
+            background-color: #4ecdc4; /* Teal/Green color */
+            color: white;
+        }
+
+        /* Hover Effects */
+        .btn:hover {
+            transform: translateY(-3px); /* Moves up slightly */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            filter: brightness(110%);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-placeholder">
+            YOUR LOGO
+        </div>
+
+        <div class="button-group">
+            <a href="craft-meal.html" class="btn btn-craft">Craft your meal!</a>
+            <a href="pre-made.html" class="btn btn-premade">Pre-made meals</a>
+        </div>
+    </div>
+
+</body>
+</html>
